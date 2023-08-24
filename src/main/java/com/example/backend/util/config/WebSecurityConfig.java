@@ -77,6 +77,7 @@ public class WebSecurityConfig {
 					.requestMatchers(POST, "/api/users/**").permitAll() // 유저관련 요청 허가
 					.requestMatchers("/login/**").permitAll() // 유저관련 요청 허가
 					.requestMatchers(GET, "/api/musics/**").permitAll()
+						.requestMatchers("/api/tracks/play-count/{track-id}").authenticated()
 					.anyRequest().permitAll()
 			);
 		return http.build();
