@@ -3,7 +3,6 @@ package com.example.backend.user.service;
 import java.net.URI;
 import java.util.UUID;
 
-import com.example.backend.util.RedisUtil;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.RequestEntity;
@@ -20,10 +19,10 @@ import com.example.backend.user.dto.TokenDto;
 import com.example.backend.user.dto.UserInfoDto;
 import com.example.backend.user.entity.RefreshToken;
 import com.example.backend.user.entity.User;
-import com.example.backend.util.UserRoleEnum;
 import com.example.backend.user.repository.RefreshTokenRepository;
 import com.example.backend.user.repository.UserRepository;
 import com.example.backend.util.JwtUtil;
+import com.example.backend.util.UserRoleEnum;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -47,7 +46,7 @@ public class KaKaoService {
 	private final RefreshTokenRepository refreshTokenRepository;
 	private final RestTemplate restTemplate;
 	private final JwtUtil jwtUtil;
-	private final RedisUtil redisUtil;
+	// private final RedisUtil redisUtil;
 
 	@Transactional
 	public TokenDto kakaoLogin(String code) throws JsonProcessingException {
