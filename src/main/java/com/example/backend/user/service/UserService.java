@@ -237,12 +237,12 @@ public class UserService {
 			.orElseThrow(() -> new UserNotFoundException("유저를 찾을 수 없습니다"));
 		String newAccessToken = jwtUtil.createAccessToken(email, user.getUserId(), user.getNickname(), user.getRole());
 
-		String refreshTokenFromRedis = redisUtil.getRefreshToken(email);
-		if (encryptedToken.equals(refreshTokenFromRedis)) {
-			log.info("redis에서 refresh토큰 검증");
-			response.addHeader(JwtUtil.AUTHORIZATION_HEADER, newAccessToken);
-			return new ResponseEntity<>(new StatusResponseDto("새로운 엑세스 토큰이 발급되었습니다.", true), HttpStatus.OK);
-		}
+		// String refreshTokenFromRedis = redisUtil.getRefreshToken(email);
+		// if (encryptedToken.equals(refreshTokenFromRedis)) {
+		// 	log.info("redis에서 refresh토큰 검증");
+		// 	response.addHeader(JwtUtil.AUTHORIZATION_HEADER, newAccessToken);
+		// 	return new ResponseEntity<>(new StatusResponseDto("새로운 엑세스 토큰이 발급되었습니다.", true), HttpStatus.OK);
+		// }
 		RefreshToken refreshTokenFromDB = refreshTokenRepository.findByKeyEmail(email)
 			.orElseThrow(() -> new NoSuchElementException("리프레시 토큰이 없습니다."));
 		log.info("DB에서 refresh토큰 검증");

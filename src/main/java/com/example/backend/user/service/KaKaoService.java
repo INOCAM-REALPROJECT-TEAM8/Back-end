@@ -77,8 +77,8 @@ public class KaKaoService {
 			jwtUtil.encryptRefreshToken(jwtUtil.substringToken(createRefreshToken)), kakaoUser.getEmail());
 		refreshTokenRepository.save(newRefreshToken);
 
-		log.info("리프레시토큰 redis에 저장");
-		redisUtil.saveRefreshToken(kakaoUser.getEmail(), encryptedRefreshToken);
+		// log.info("리프레시토큰 redis에 저장");
+		// redisUtil.saveRefreshToken(kakaoUser.getEmail(), encryptedRefreshToken);
 
 		log.info("JWT 토큰 반환 종료");
 		return tokenDto;
