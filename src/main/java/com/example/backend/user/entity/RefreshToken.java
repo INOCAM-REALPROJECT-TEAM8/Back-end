@@ -27,4 +27,7 @@ public class RefreshToken {
 		this.refreshToken = refreshToken;
 		this.keyEmail = keyEmail;
 	}
+	public void updateToken(String newToken){
+		this.refreshToken = newToken;
+	}
 }
