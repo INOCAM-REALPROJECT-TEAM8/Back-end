@@ -11,9 +11,11 @@
         <colorCoding>true</colorCoding>
     </appender>
     <!-- 콘솔 appender 설정 -->
+    <conversionRule conversionWord="maybeUserId" converterClass="ch.qos.logback.classic.pattern.MDCConverter" />
+    <conversionRule conversionWord="maybeTrackId" converterClass="ch.qos.logback.classic.pattern.MDCConverter" />
     <appender name="Console" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
-            <Pattern>%d %-5level [%thread] %logger{35} - %msg %X{userId} %X{trackId} %ex%n</Pattern>
+            <Pattern>%d %-5level [%thread] %logger{35} - %msg %replace(%maybeUserId{userId}){'^([^$]+)$', ' UserID:$1'}%replace(%maybeTrackId{trackId}){'^([^$]+)$', ' TrackID:$1'} %ex%n</Pattern>
         </encoder>
     </appender>
     <!-- 파일 appender 설정 -->

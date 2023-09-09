@@ -66,12 +66,14 @@ public class GoogleService {
 		TokenDto tokenDto = new TokenDto(createAccessToken, createRefreshToken, googleUser);
 		RefreshToken CheckRefreshToken = refreshTokenRepository.findByKeyEmail(googleUser.getEmail()).orElse(null);
 
-		log.info("해당 email에 대한 refresh 토큰이 있으면 삭제 후 저장");
 		if (CheckRefreshToken != null) {
-			refreshTokenRepository.delete(CheckRefreshToken);
+			log.info("해당 email에 대한 refresh 토큰이 있으면 업데이트");
+			CheckRefreshToken.updateToken(encryptedRefreshToken);
+		}else{
+			log.info("refresh 토큰 새로 만들기");
+			RefreshToken newRefreshToken = new RefreshToken(encryptedRefreshToken, googleUser.getEmail());
+			refreshTokenRepository.save(newRefreshToken);
 		}
-		RefreshToken newRefreshToken = new RefreshToken(encryptedRefreshToken, googleUser.getEmail());
-		refreshTokenRepository.save(newRefreshToken);
 
 		// log.info("리프레시토큰 redis에 저장");
 		// redisUtil.saveRefreshToken(googleUser.getEmail(), encryptedRefreshToken);
