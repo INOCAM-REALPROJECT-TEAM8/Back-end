@@ -1,40 +1,41 @@
 package com.example.backend.util.security;
 
+import java.io.IOException;
+
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
 import com.example.backend.user.dto.UserInfoDto;
 import com.example.backend.user.dto.UserResponseDto;
 import com.example.backend.user.entity.RefreshToken;
 import com.example.backend.user.repository.RefreshTokenRepository;
 import com.example.backend.util.ImageUtil;
 import com.example.backend.util.JwtUtil;
-import com.example.backend.util.RedisUtil;
 import com.example.backend.util.UserRoleEnum;
 import com.example.backend.util.globalDto.StatusResponseDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-
-import java.io.IOException;
 
 @Slf4j
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 	private final JwtUtil jwtUtil;
 	private final ImageUtil imageUtil;
-	private final RedisUtil redisUtil;
+	// private final RedisUtil redisUtil;
 	private final RefreshTokenRepository refreshTokenRepository;
 
 	public JwtAuthenticationFilter(JwtUtil jwtUtil, RefreshTokenRepository refreshTokenRepository,
-		ImageUtil imageUtil , RedisUtil redisUtil) {
+		ImageUtil imageUtil) {
 		this.jwtUtil = jwtUtil;
 		this.imageUtil = imageUtil;
 		this.refreshTokenRepository = refreshTokenRepository;
-		this.redisUtil = redisUtil;
+		// this.redisUtil = redisUtil;
 		setFilterProcessesUrl("/api/users/login");
 	}
 
@@ -71,11 +72,11 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 			refreshTokenRepository.delete(CheckRefreshToken);
 		}
 		RefreshToken newRefreshToken = new RefreshToken(
-				encryptedRefreshToken , email);
+			encryptedRefreshToken, email);
 		refreshTokenRepository.save(newRefreshToken);
 
-		log.info("리프레시토큰 redis에 저장");
-		redisUtil.saveRefreshToken(email, encryptedRefreshToken);
+		// log.info("리프레시토큰 redis에 저장");
+		// redisUtil.saveRefreshToken(email, encryptedRefreshToken);
 
 		response.addHeader(JwtUtil.AUTHORIZATION_HEADER, createAccessToken);
 		response.addHeader(JwtUtil.REFRESH_HEADER, createRefreshToken);

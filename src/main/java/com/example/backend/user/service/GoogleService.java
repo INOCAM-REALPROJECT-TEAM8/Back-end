@@ -47,7 +47,7 @@ public class GoogleService {
 	private final RefreshTokenRepository refreshTokenRepository;
 	private final RestTemplate restTemplate;
 	private final JwtUtil jwtUtil;
-	private final RedisUtil redisUtil;
+	// private final RedisUtil redisUtil;
 
 	@Transactional
 	public TokenDto googleLogin(String code) throws JsonProcessingException {
@@ -72,8 +72,8 @@ public class GoogleService {
 		RefreshToken newRefreshToken = new RefreshToken(encryptedRefreshToken , googleUser.getEmail());
 		refreshTokenRepository.save(newRefreshToken);
 
-		log.info("리프레시토큰 redis에 저장");
-		redisUtil.saveRefreshToken(googleUser.getEmail(), encryptedRefreshToken);
+		// log.info("리프레시토큰 redis에 저장");
+		// redisUtil.saveRefreshToken(googleUser.getEmail(), encryptedRefreshToken);
 		log.info("JWT 토큰 반환 종료");
 		return tokenDto;
 	}

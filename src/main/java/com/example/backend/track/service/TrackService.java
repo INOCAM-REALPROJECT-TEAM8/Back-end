@@ -1,7 +1,29 @@
 package com.example.backend.track.service;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.example.backend.playlist.repository.PlayListRepository;
-import com.example.backend.track.dto.*;
+import com.example.backend.track.dto.StarDto;
+import com.example.backend.track.dto.StarListResponseDto;
+import com.example.backend.track.dto.Top7Dto;
+import com.example.backend.track.dto.Track;
+import com.example.backend.track.dto.TrackDetailDto;
+import com.example.backend.track.dto.TrackDetailModal;
 import com.example.backend.track.entity.QStar;
 import com.example.backend.track.entity.Recent;
 import com.example.backend.track.entity.Star;
@@ -14,31 +36,16 @@ import com.example.backend.user.entity.QImage;
 import com.example.backend.user.entity.QUser;
 import com.example.backend.user.entity.User;
 import com.example.backend.user.repository.UserRepository;
-import com.example.backend.util.globalDto.StatusResponseDto;
 import com.example.backend.util.execption.DataNotFoundException;
 import com.example.backend.util.execption.TrackNotFoundException;
 import com.example.backend.util.execption.UserNotFoundException;
+import com.example.backend.util.globalDto.StatusResponseDto;
 import com.example.backend.util.security.UserDetailsImpl;
 import com.example.backend.util.spotify.SpotifyRequestManager;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
+import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
@@ -88,7 +95,6 @@ public class TrackService {
 		return spotifyRequestManager.getTracksInfo(trackIds);
 	}
 
-
 	@Transactional(readOnly = true)
 	public List<Track> recommendTracks(UserDetailsImpl userDetails) {
 		logger.info("추천 트랙 받아오기");
@@ -99,7 +105,7 @@ public class TrackService {
 		trackIds.addAll(trackCountRepositoryImpl.findHighRatedAndRelatedTracks(user));
 		trackIds.addAll(trackCountRepositoryImpl.findRecent5TracksFromUser(user));
 		List<String> trackIdsList = new ArrayList<>(trackIds);
-		if(trackIdsList.size()<2){
+		if (trackIdsList.size() < 2) {
 			trackIdsList.add("7iN1s7xHE4ifF5povM6A48");
 			trackIdsList.add("5aHwYjiSGgJAxy10mBMlDT");
 		}
@@ -118,7 +124,6 @@ public class TrackService {
 		Track track = spotifyRequestManager.getTrackInfo(trackId);
 		String artistName = track.getArtists().get(0).getArtistName();
 		String trackTitle = track.getTitle();
-
 
 		return TrackDetailModal.builder()
 			.image(track.getImage())
@@ -143,7 +148,7 @@ public class TrackService {
 		User user = userRepository.findById(userId)
 			.orElseThrow(() -> new UserNotFoundException("유저를 찾을 수 없습니다"));
 		Pageable pageable = PageRequest.of(0, 20, Sort.by(Sort.Direction.DESC, "creationDate"));
-		List<Recent> recentList = recentRepository.findAllByUserOrderByCreationDateDesc(user,pageable);
+		List<Recent> recentList = recentRepository.findAllByUserOrderByCreationDateDesc(user, pageable);
 		List<String> trackIds = recentList.stream()
 			.map(Recent::getTrackId)
 			.toList();
@@ -159,10 +164,10 @@ public class TrackService {
 			recentRepository.delete(recentTracks.get(0));
 		}
 		Recent newRecent = new Recent(trackId, user);
-		Recent recent = recentRepository.findByUserAndTrackId(user,trackId).orElse(null);
-		if(recent==null){
+		Recent recent = recentRepository.findByUserAndTrackId(user, trackId).orElse(null);
+		if (recent == null) {
 			recentRepository.save(newRecent);
-		}else{
+		} else {
 			recentRepository.delete(recent);
 			recentRepository.save(newRecent);
 		}
@@ -217,23 +222,23 @@ public class TrackService {
 		QImage qImage = QImage.image;
 
 		List<StarListResponseDto> result = jpaQueryFactory
-				.select(Projections.constructor(StarListResponseDto.class,
-						qUser.userId,
-						qUser.nickname,
-						qImage.imageUrl,
-						qStar.star
-				))
-				.from(qStar)
-				.leftJoin(qStar.user, qUser)
-				.leftJoin(qUser.image, qImage)
-				.where(qStar.trackId.eq(trackId))
-				.fetch();
+			.select(Projections.constructor(StarListResponseDto.class,
+				qUser.userId,
+				qUser.nickname,
+				qImage.imageUrl,
+				qStar.star
+			))
+			.from(qStar)
+			.leftJoin(qStar.user, qUser)
+			.leftJoin(qUser.image, qImage)
+			.where(qStar.trackId.eq(trackId))
+			.fetch();
 
 		if (result == null || result.isEmpty()) {
 			logger.warn("잘못된 트랙 아이디로 평점 리스트 조회");
 			throw new DataNotFoundException("데이터가 비어있습니다. 트랙아이디: " + trackId);
 		}
 
-		return new ResponseEntity<>(result,HttpStatus.OK);
+		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
 }
