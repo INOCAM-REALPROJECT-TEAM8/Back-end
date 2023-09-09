@@ -18,6 +18,7 @@ import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
+import com.example.backend.util.execption.TokenNotFoundException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -48,7 +49,8 @@ public class SpotifyTokenManager {
 	//     return accessToken;
 	// }
 
-	private synchronized String requestAccessToken() {
+	protected synchronized String requestAccessToken() {
+		// return getAccessToken();
 		logger.info("Access Token 요청 메서드 시작");
 		String accessToken = null;
 
