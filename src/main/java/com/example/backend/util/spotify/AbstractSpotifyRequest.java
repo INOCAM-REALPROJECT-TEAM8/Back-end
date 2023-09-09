@@ -29,7 +29,7 @@ public abstract class AbstractSpotifyRequest {
 
         log.info("스포티파이 API로부터 ACCESS TOKEN 받기");
 
-        String accessToken = spotifyTokenManager.getAccessToken();
+        String accessToken = spotifyTokenManager.requestAccessToken();
 
         restTemplate.setErrorHandler(new CustomResponseErrorHandler());
         restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
@@ -73,7 +73,7 @@ public abstract class AbstractSpotifyRequest {
         } catch (HttpClientErrorException e) {
             if (e.getStatusCode() == HttpStatus.UNAUTHORIZED && isTokenExpired(e)) {
                 log.warn("Spotify Access Token이 만료됨. 새 토큰을 요청하고 API를 다시 호출합니다.", e);
-                spotifyTokenManager.getAccessToken();
+                spotifyTokenManager.requestAccessToken();
                 return fetchDataFromSpotifyAPI(trackIds, attempt + 1); // 재시도
             } else {
                 log.error("HTTP 클라이언트 오류 발생: 상태 코드 {}", e.getStatusCode(), e);

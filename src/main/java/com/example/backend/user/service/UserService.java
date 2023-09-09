@@ -36,7 +36,6 @@ import com.example.backend.user.repository.RefreshTokenRepository;
 import com.example.backend.user.repository.UserRepository;
 import com.example.backend.util.ImageUtil;
 import com.example.backend.util.JwtUtil;
-import com.example.backend.util.RedisUtil;
 import com.example.backend.util.UserRoleEnum;
 import com.example.backend.util.execption.UserNotFoundException;
 import com.example.backend.util.globalDto.StatusResponseDto;
@@ -60,7 +59,7 @@ public class UserService {
 	private final JavaMailSender javaMailSender;
 	private final AmazonS3 amazonS3;
 	private final String bucket;
-	private final RedisUtil redisUtil;
+	// private final RedisUtil redisUtil;
 
 	@Value("${admin.token}")
 	private String ADMIN_TOKEN;
