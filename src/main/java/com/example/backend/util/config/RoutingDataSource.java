@@ -11,7 +11,8 @@ public class RoutingDataSource extends AbstractRoutingDataSource {
 	@Nullable
 	@Override
 	protected Object determineCurrentLookupKey() {
-		String lookupKey = TransactionSynchronizationManager.isCurrentTransactionReadOnly() ? "replica" : "master";
+		//비용 문제로 읽기 전용 복제본 비활성화.
+		String lookupKey = TransactionSynchronizationManager.isCurrentTransactionReadOnly() ? "master" : "master";
 		log.info("Current DataSource is {}", lookupKey);
 		return lookupKey;
 	}

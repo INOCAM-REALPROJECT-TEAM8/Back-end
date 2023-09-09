@@ -68,13 +68,15 @@ public class KaKaoService {
 		TokenDto tokenDto = new TokenDto(createAccessToken, createRefreshToken, kakaoUser);
 		RefreshToken CheckRefreshToken = refreshTokenRepository.findByKeyEmail(kakaoUser.getEmail()).orElse(null);
 
-		log.info("해당 email에 대한 refresh 토큰이 있으면 삭제 후 저장.");
 		if (CheckRefreshToken != null) {
-			refreshTokenRepository.delete(CheckRefreshToken);
+			log.info("해당 email에 대한 refresh 토큰이 있으면 삭제 후 저장.");
+			CheckRefreshToken.updateToken(encryptedRefreshToken);
+		}else{
+			log.info("refresh 토큰 새로 만들기");
+			RefreshToken newRefreshToken = new RefreshToken(
+				jwtUtil.encryptRefreshToken(jwtUtil.substringToken(createRefreshToken)), kakaoUser.getEmail());
+			refreshTokenRepository.save(newRefreshToken);
 		}
-		RefreshToken newRefreshToken = new RefreshToken(
-			jwtUtil.encryptRefreshToken(jwtUtil.substringToken(createRefreshToken)), kakaoUser.getEmail());
-		refreshTokenRepository.save(newRefreshToken);
 
 		// log.info("리프레시토큰 redis에 저장");
 		// redisUtil.saveRefreshToken(kakaoUser.getEmail(), encryptedRefreshToken);
