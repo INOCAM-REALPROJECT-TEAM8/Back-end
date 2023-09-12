@@ -3,6 +3,9 @@
 ![600_340-해상도-300](https://github.com/INOCAM-REALPROJECT-TEAM8/Back-end/assets/123007169/a7b05ff5-cd72-4429-a9c4-721c6aa4ca9f)
 
 # 🔗 팀 하이드 링크 
+
+✳✳ **하이드 프로젝트의 자세한 정보는 노션링크를 꼭 확인해 주세요** ✳✳
+
 https://www.notion.so/HIDE-MUSIC-667e1ba487634c1f8105613d98cd69e3
 
 ## 🎇 프로젝트 기획
