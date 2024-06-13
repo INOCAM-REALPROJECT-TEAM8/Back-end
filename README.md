@@ -33,6 +33,6 @@ https://www.notion.so/HIDE-MUSIC-667e1ba487634c1f8105613d98cd69e3
 | **FE(react)** | 이명빈 | [Github](https://github.com/myeongbin0918) | [Blog](https://my-eong-bin.tistory.com/) |
 | **FE(react)** | 지현주 | [Github](https://github.com/jihyunjoo2023) | [Blog](https://tistory.com) |
 | **BE(spring)** | 김형준 | [Github](https://github.com/HGive) | [Blog](https://velog.io/@skyjoon34) |
-| **BE(spring)** | 전선웅 | [Github](https://github.com/bbororo5) | [Blog](https://velog.io/@philomuvie) |
+| **BE(spring)** | 전선웅 | [Github](https://github.com/bbororo5) |  |
 | **BE(spring)** | 황은혜 | [Github](https://github.com/GrH9018) | - |
 | **Designer** | 이수민 | - | - |
